@@ -1,0 +1,3 @@
+/Users/danielaguila/Desktop/CLionProjects/COSC2430/classWork/basketball/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/danielaguila/Desktop/CLionProjects/COSC2430/classWork/basketball/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/danielaguila/Desktop/CLionProjects/COSC2430/classWork/basketball/cmake-build-debug/CMakeFiles/basketball.dir
