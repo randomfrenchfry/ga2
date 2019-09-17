@@ -8,19 +8,18 @@ private:
     int age;
     int minutes;
 public:
-    Player(int num,int age, int min);
+    Player(int num,int age, int min){
+        this->number = num;
+        this->age = age;
+        this->minutes = min;
+    }
     void setNumber(int num){this->number = num;}
     void setAge(int age){this->age = age;}
     void setMinutes(int min){this->minutes = min;}
     int getNumber(){return number;}
     int getAge(){return age;}
+    int getMinute(){return minutes;}
 };
-
-Player::Player(int num, int age, int min) {
-    this->number = num;
-    this->age = age;
-    this->minutes = min;
-}
 //Child Class
 class courtPlayer: public Player{
 private:
@@ -33,7 +32,7 @@ class BenchPlayer: public Player{
 
 //Linked List
 struct Node{
-    Player data;
+    int num,age,min;
     Node* next;
 };
 class list{
@@ -56,13 +55,22 @@ list::list() {
 }
 
 void list::createPlayer(int num,int age, int min){
-    Player
-    Node*p = new Node;
-    p->data.setNumber(num);
+    //Create a Node with the properties of the Player
+    Player player(num,age,min);
+    Node*p = new Node();
+    p->num = player.getNumber();
+    p->age = player.getAge();
+    p->min = player.getMinute();
 
-    if(head == NULL){
+    if(head == NULL){ //If the player is the first Node
         head = p;
         tail = p;
         p = NULL;
     }
+    else{            //If the list is not empty
+        tail->next = p;
+        tail = p;
+    }
 }
+
+
