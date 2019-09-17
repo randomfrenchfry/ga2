@@ -1,76 +1,231 @@
+//Sony's Sample Code
 #include <iostream>
 using namespace std;
 
-//Parent Class
-class Player{
-private:
+class Player
+{
+public:
     int number;
     int age;
     int minutes;
-public:
-    Player(int num,int age, int min){
-        this->number = num;
-        this->age = age;
-        this->minutes = min;
+
+    bool isOnCourt;
+
+    Player* next;
+    Player* prev;
+
+    Player() {
+        this->number = -1;
+        this->age = -1;
+        this->minutes = -1;
+
+        this->isOnCourt = false;
+
+        this->next = NULL;
+        this->prev = NULL;
     }
-    void setNumber(int num){this->number = num;}
-    void setAge(int age){this->age = age;}
-    void setMinutes(int min){this->minutes = min;}
-    int getNumber(){return number;}
-    int getAge(){return age;}
-    int getMinute(){return minutes;}
+
+    Player(int number, int age, int minutes, bool isOnCourt)
+    {
+        this->number = number;
+        this->age = age;
+        this->minutes = minutes;
+
+        this->isOnCourt = isOnCourt;
+
+        this->next = NULL;
+        this->prev = NULL;
+    }
 };
-//Child Class
-class courtPlayer: public Player{
-private:
+
+class Bench
+{
 public:
-};
-//Child Class
-class BenchPlayer: public Player{
+    Player* head;
+    Player* tail;
 
+    Bench()
+    {
+        this->head = NULL;
+        this->tail = NULL;
+    }
+
+    void addFirst() {
+
+    }
+
+    // call addLast
+    void add(Player* x)
+    {
+        if (head == NULL)
+        {
+            head = x;
+            tail = x;
+
+            return;
+        }
+
+        x->prev = tail;
+        tail->next = x;
+        tail = x;
+    }
+
+    void getFirst() {
+
+    }
+
+    void getLast() {
+
+    }
+
+
+    void get() {
+
+    }
+
+    void set() {
+
+    }
+
+    void print()
+    {
+        cout << "This is the bench: ";
+
+        Player* tmp = head;
+
+        while (tmp != NULL) {
+            cout << tmp->number;
+            if (tmp->next != NULL)
+                cout << " --> ";
+            tmp = tmp->next;
+        }
+
+        cout << endl;
+    }
 };
 
-//Linked List
-struct Node{
-    int num,age,min;
-    Node* next;
-};
-class list{
-private:
-    Node*head;
-    Node*tail;
+class Court
+{
 public:
-    list();
-    void createPlayer(int,int,int);
+    Player* head;
+    Player* tail;
+    int size;
+
+    Court()
+    {
+        this->head = NULL;
+        this->tail = NULL;
+        this->size = 0;
+    }
+
+    void add(Player* x)
+    {
+        ++size;
+
+        if (head == NULL)
+        {
+            head = x;
+            tail = x;
+
+            return;
+        }
+
+        x->prev = tail;
+        tail->next = x;
+        tail = x;
+        tail->next = head;
+    }
+
+    void set() {
+
+    }
+
+    Player* get(int index)
+    {
+        if (head == NULL)
+            return NULL;
+        if (index < 0 || index >= size)
+            return NULL;
+
+        Player* tmp = head;
+        int counter = 0;
+        while (tmp != NULL) {
+            if (counter == index)
+                return tmp;
+
+            tmp = tmp->next;
+            ++counter;
+        }
+
+        return NULL;
+    }
+
+    void print()
+    {
+        cout << "This is the court: ";
+
+        Player* tmp = head;
+
+        while (tmp != NULL) {
+            cout << tmp->number;
+            if (tmp->next != head)
+                cout << " --> ";
+            else
+                break;
+            tmp = tmp->next;
+        }
+
+        cout << endl;
+    }
+
+    void sort(string sortBy)
+    {
+        for (int i = 0; i < size - 1; i++)
+            for (int j = 0; j < size - 1; j++) {
+                Player* x = get(j);
+                Player* y = get(j + 1);
+
+                //  4-> 7-> 1
+                // &1->&2->&3
+                if (sortBy == "number" && x->number > y->number) {
+                    int tmp = x->number;
+                    x->number = y->number;
+                    y->number = tmp;
+                }
+                if (sortBy == "minutes" && x->minutes > y->minutes) {
+                    int tmp = x->minutes;
+                    x->minutes = y->minutes;
+                    y->minutes = tmp;
+                }
+                if (sortBy == "age" && x->age > y->age) {
+                    int tmp = x->age;
+                    x->age = y->age;
+                    y->age = tmp;
+                }
+            }
+    }
 };
 
-int main() {
-    //Since the numbers of players are from 1 to 12
+int main()
+{
+    Player* lockerRoom = new Player[12];
+
+    Bench bench;
+    for (int i = 6; i <= 12; i++) {
+        Player* p = new Player(i, i + 19 + i, 0, false);
+        bench.add(p);
+    }
+    bench.print();
+
+    Court court;
+    for (int i = 1; i <= 5; i++) {
+        Player* p = new Player((i + 1), i, 0, false);
+        court.add(p);
+    }
+
+    court.sort("age");
+    court.print();
+
 
     return 0;
 }
-
-list::list() {
-    head = NULL;
-    tail = NULL;
-}
-
-void list::createPlayer(int num,int age, int min){
-    //Create a Node with the properties of the Player
-    Player player(num,age,min);
-    Node*p = new Node;
-    p->num = player.getNumber();
-    p->age = player.getAge();
-    p->min = player.getMinute();
-
-    if(head == NULL){ //If the player is the first Node
-        head = p;
-        tail = p;
-        p = NULL;
-    }
-    else{            //If the list is not empty
-        tail->next = p;
-        tail = p;
-    }
-}
-
