@@ -45,6 +45,7 @@ public:
 };
 
 int main() {
+    //Since the numbers of players are from 1 to 12
 
     return 0;
 }
@@ -57,7 +58,7 @@ list::list() {
 void list::createPlayer(int num,int age, int min){
     //Create a Node with the properties of the Player
     Player player(num,age,min);
-    Node*p = new Node();
+    Node*p = new Node;
     p->num = player.getNumber();
     p->age = player.getAge();
     p->min = player.getMinute();
@@ -72,5 +73,4 @@ void list::createPlayer(int num,int age, int min){
         tail = p;
     }
 }
-
 
