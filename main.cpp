@@ -1,6 +1,8 @@
 //Sunny's Sample Code
 
 #include <iostream>
+#include <fstream>
+#include "ArgumentManager.h"
 using namespace std;
 
 class Player
@@ -309,24 +311,40 @@ void startGame(Bench bench, Court court)//working on this
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    ArgumentManager am(argc,argv);
+    string inputfilename = am.get("input");
+    string outputfilename = am.get("input");
+
     Player* lockerRoom = new Player[12];
     
     Bench bench;
-    for (int i = 6; i <= 12; i++) {
-        Player* p = new Player(i, i + 19 + i, 0, false);
+
+    ifstream inf;
+    inf.open(inputfilename);
+
+    for (int i = 0; i <= 6; i++) {
+        int number;
+        int age;
+        inf >> number;
+        inf >> age;
+        Player* p = new Player(number, age, 0, false);
         bench.add(p);
     }
     bench.print();
     
     Court court;
     for (int i = 1; i <= 5; i++) {
-        Player* p = new Player((i + 1), i, 0, true);
+        int number;
+        int age;
+        inf >> number;
+        inf >> age;
+        Player* p = new Player(number, age, 0, false);
         court.add(p);
     }
     
-    court.sort("age");// should be age
+    court.sort("age");
     court.print();
     
     startGame(bench, court);
