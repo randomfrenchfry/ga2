@@ -1,4 +1,4 @@
-//Sony's Sample Code
+//Sunny's Sample Code
 
 #include <iostream>
 using namespace std;
@@ -95,7 +95,7 @@ public:
     
     Player* getLast()//why?
     {
-        return tail;
+        return tail->next;
     }
     
     
@@ -119,7 +119,7 @@ public:
         return NULL;
     }
     
-    void set(Player* x)// change bench status?
+    void set(Player* x)// change bench status
     {
         x->isOnCourt = !x->isOnCourt;
     }
@@ -173,7 +173,7 @@ public:
         tail->next = head;
     }
     
-    void set(int index, int minutesPlayed)//maybe idk
+    void set(int index, int minutesPlayed)
     {
         Player* tmp = head;
         int counter = 0;
@@ -252,6 +252,36 @@ public:
     }
 };
 
+void startGame(Bench bench, Court court)//working on this
+{
+    int quart =1;
+    double min =0.0;
+    
+    while(quart<5)
+    {
+        while(min<12.0)
+        {
+            double old = court.tail->age*.1;
+            for(double i =0.0;i<0.9;i+=.1)
+            {
+                if(old ==min+i)
+                {
+                    //replace with bench player (needs work)
+                    //add minutes to minutes played
+                    cout<<min+i<<endl;
+                    return;
+                }
+            }
+            min++;
+        }
+        //displaying the output all together (needs work)
+        cout<<"Report "<<quart<<endl;
+        court.print();
+        
+        quart++;
+    }
+}
+
 int main()
 {
     Player* lockerRoom = new Player[12];
@@ -269,10 +299,11 @@ int main()
         court.add(p);
     }
     
-    court.sort("age");
+    court.sort("minutes");
     court.print();
     
-    
+    startGame(bench, court);
+   
     
     
     
@@ -280,3 +311,4 @@ int main()
     
     return 0;
 }
+
