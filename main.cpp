@@ -268,6 +268,7 @@ void startGame(Bench bench, Court court)//working on this
                 {
                     //replace with bench player (needs work)
                     //add minutes to minutes played
+                    court.tail->minutes = min+i;
                     cout<<min+i<<endl;
                     return;
                 }
