@@ -9,6 +9,7 @@ public:
     int number;
     int age;
     int minutes;
+    double timeatstart;
     
     bool isOnCourt;
     
@@ -19,6 +20,7 @@ public:
         this->number = -1;
         this->age = -1;
         this->minutes = -1;
+        this->timeatstart = -1;
         
         this->isOnCourt = false;
         
@@ -31,6 +33,7 @@ public:
         this->number = number;
         this->age = age;
         this->minutes = minutes;
+        this->timeatstart = 0;
         
         this->isOnCourt = isOnCourt;
         
@@ -95,9 +98,8 @@ public:
     
     Player* getLast()//why?
     {
-        return tail->next;
+        return tail->next; // wrong
     }
-    
     
     Player* get(int index)
     {
@@ -122,6 +124,15 @@ public:
     void set(Player* x)// change bench status
     {
         x->isOnCourt = !x->isOnCourt;
+    }
+
+    Player* unbench(){
+        //return head
+        //make 2nd player new head
+        Player* tmp = head;
+        head = head->next;
+        set(tmp);
+        return tmp;
     }
     
     void print()
@@ -264,19 +275,31 @@ void startGame(Bench bench, Court court)//working on this
             double old = court.head->age*.1; // num of mins oldest player is allowed to play
             for(double i =0.0;i<0.9;i+=.1)
             {
-                if(old <=min+i)
+                if(old <= (quart*12 + min+i) - court.head->timeatstart)
+                //        time since start   - time player entered court
                 {
                     //add minutes to minutes played
                     court.head->minutes += i;
                     //bench player (needs work) to end of bench
+                    bench.add(court.head);
+                    bench.set(court.head);
                     //add player to court from top of bench
+                    Player* tmp = bench.unbench();
+                    //set timestamp
+                    tmp->timeatstart = quart*12 + min+i;
+                    court.add(tmp);
                     //sort court by age
+                    court.sort("age");
                     cout<<min+i<<endl;
-                    return;// remove this line
                 }
             }
             min++;
-            //add 1 to all players on court
+            //add 1 min to all players on court
+            Player* cur = court.head;
+            for(int i=0;i<court.size;i++){
+                cur->minutes += 1;
+                cur = cur->next;
+            }
         }
         //displaying the output all together (needs work)
         cout<<"Report "<<quart<<endl;
@@ -303,7 +326,7 @@ int main()
         court.add(p);
     }
     
-    court.sort("minutes");// should be age
+    court.sort("age");// should be age
     court.print();
     
     startGame(bench, court);
