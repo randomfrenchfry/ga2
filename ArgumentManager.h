@@ -42,7 +42,7 @@ void ArgumentManager::parse(string rawArguments, char delimiter) {
                 currentArgumentValue << rawArguments[i];
             }
             else {
-                // ignore any spaces in argument names. 
+                // ignore any spaces in argument names.
                 if (rawArguments[i] == ' ')
                     continue;
                 currentArgumentName << rawArguments[i];
@@ -69,7 +69,7 @@ ArgumentManager::ArgumentManager(string rawArguments, char delimiter) {
 
 string ArgumentManager::get(string argumentName) {
     map<string, string>::iterator iter = m_argumentMap.find(argumentName);
-
+    
     //If the argument is not found, return a blank string.
     if (iter == m_argumentMap.end()) {
         return "";
@@ -92,3 +92,4 @@ ostream& operator << (ostream &out, ArgumentManager &am) {
     out << am.toString();
     return out;
 }
+
