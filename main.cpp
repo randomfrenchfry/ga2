@@ -256,24 +256,28 @@ void startGame(Bench bench, Court court)//working on this
 {
     int quart =1;
     double min =0.0;
+    bool leftorright = false;
     
     while(quart<5)
     {
         while(min<12.0)
         {
-            double old = court.tail->age*.1;
+            double old = court.tail->age*.1; // num of mins oldest player is allowed to play
             for(double i =0.0;i<0.9;i+=.1)
             {
                 if(old ==min+i)
                 {
-                    //replace with bench player (needs work)
+                    //bench player (needs work)
                     //add minutes to minutes played
-                    court.tail->minutes = min+i;
+                    //add player to court
+                    //sort court by age
+                    court.tail->minutes = min+i; // make this add only i
                     cout<<min+i<<endl;
-                    return;
+                    return;// remove this line
                 }
             }
             min++;
+            //add 1 to all players on court
         }
         //displaying the output all together (needs work)
         cout<<"Report "<<quart<<endl;
@@ -300,7 +304,7 @@ int main()
         court.add(p);
     }
     
-    court.sort("minutes");
+    court.sort("minutes");// should be age
     court.print();
     
     startGame(bench, court);
