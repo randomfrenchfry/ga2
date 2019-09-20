@@ -233,20 +233,20 @@ public:
                 
                 //  4-> 7-> 1
                 // &1->&2->&3
-                if (sortBy == "number" && x->number > y->number) {
-                    int tmp = x->number;
-                    x->number = y->number;
-                    y->number = tmp;
+                if (sortBy == "number" && x->number > y->number) { // how did you mess this up? 
+                    Player* tmp = x; 
+                    x = y; 
+                    y = tmp; 
                 }
                 if (sortBy == "minutes" && x->minutes > y->minutes) {
-                    int tmp = x->minutes;
-                    x->minutes = y->minutes;
-                    y->minutes = tmp;
+                    Player* tmp = x; 
+                    x = y; 
+                    y = tmp; 
                 }
                 if (sortBy == "age" && x->age > y->age) {
-                    int tmp = x->age;
-                    x->age = y->age;
-                    y->age = tmp;
+                    Player* tmp = x; 
+                    x = y; 
+                    y = tmp; 
                 }
             }
     }
@@ -256,22 +256,21 @@ void startGame(Bench bench, Court court)//working on this
 {
     int quart =1;
     double min =0.0;
-    bool leftorright = false;
     
     while(quart<5)
     {
         while(min<12.0)
         {
-            double old = court.tail->age*.1; // num of mins oldest player is allowed to play
+            double old = court.head->age*.1; // num of mins oldest player is allowed to play
             for(double i =0.0;i<0.9;i+=.1)
             {
-                if(old ==min+i)
+                if(old <=min+i)
                 {
-                    //bench player (needs work)
                     //add minutes to minutes played
-                    //add player to court
+                    court.head->minutes += i;
+                    //bench player (needs work) to end of bench
+                    //add player to court from top of bench
                     //sort court by age
-                    court.tail->minutes = min+i; // make this add only i
                     cout<<min+i<<endl;
                     return;// remove this line
                 }
