@@ -1,4 +1,4 @@
-//Sunny's Sample Code
+
 
 #include <iostream>
 #include <fstream>
@@ -58,23 +58,8 @@ public:
         this->size =0;
     }
     
-    void addFirst(Player *x) //done I think
-    {
-        if (head == NULL)
-        {
-            head = x;
-            tail = x;
-            
-            return;
-        }
-        x->next = head;
-        head = x;
-        ++size;
-        
-        
-    }
+
     
-    // call addLast
     void add(Player* x)
     {
         if (head == NULL)
@@ -91,17 +76,8 @@ public:
         ++size;
     }
     
-    Player* getFirst()//why?
-    {
-        
-        return head;
-        
-    }
-    
-    Player* getLast()//why?
-    {
-        return tail->next; // wrong
-    }
+  
+
     
     Player* get(int index)
     {
@@ -123,14 +99,12 @@ public:
         return NULL;
     }
     
-    void set(Player* x)// change bench status
+    void set(Player* x)
     {
         x->isOnCourt = !x->isOnCourt;
     }
-
+    
     Player* unbench(){
-        //return head
-        //make 2nd player new head
         Player* tmp = head;
         head = head->next;
         set(tmp);
@@ -191,7 +165,7 @@ public:
         head = head->next;
         head->prev = tail;
     }
-
+    
     void set(int index, int minutesPlayed)
     {
         Player* tmp = head;
@@ -246,29 +220,31 @@ public:
                 Player* x = get(j);
                 Player* y = get(j + 1);
                 
-                //  4-> 7-> 1
-                // &1->&2->&3
-                if (sortBy == "number" && x->number > y->number) { // how did you mess this up? 
-                    Player* tmp = x; 
-                    x = y; 
-                    y = tmp; 
+               
+                if (sortBy == "number" && x->number > y->number) {
+                    Player* tmp = x;
+                    x = y;
+                    y = tmp;
                 }
                 if (sortBy == "minutes" && x->minutes > y->minutes) {
-                    Player* tmp = x; 
-                    x = y; 
-                    y = tmp; 
+                    Player* tmp = x;
+                    x = y;
+                    y = tmp;
                 }
                 if (sortBy == "age" && x->age > y->age) {
-                    Player* tmp = x; 
-                    x = y; 
-                    y = tmp; 
+                    Player* tmp = x;
+                    x = y;
+                    y = tmp;
                 }
             }
     }
 };
 
-void startGame(Bench bench, Court court)//working on this
+
+
+void startGame(Bench bench, Court court, Player* lockerRoom)//working on this
 {
+    
     int quart =1;
     double min =0.0;
     
@@ -280,9 +256,9 @@ void startGame(Bench bench, Court court)//working on this
             for(double i =0.0;i<0.9;i+=.1)
             {
                 if(old <= ((quart-1)*12 + min+i) - court.head->timeatstart)
-                //        time since start   - time player entered court
+                    //        time since start   - time player entered court
                 {
-                    cout << "changing player: " << court.head->number << "played: " << court.head->minutes << " st time:" << (quart-1)*12 + min+i << endl;
+                    //cout << "changing player: " << court.head->number << "played: " << court.head->minutes << " st time:" << (quart-1)*12 + min+i << endl;
                     //add minutes to minutes played
                     court.head->minutes += i;
                     //bench player (needs work) to end of bench
@@ -296,7 +272,7 @@ void startGame(Bench bench, Court court)//working on this
                     court.add(tmp);
                     //sort court by age
                     court.sort("age");
-                    cout<<min+i<<endl;
+                    //cout<<min+i<<endl;
                 }
             }
             min++;
@@ -307,28 +283,50 @@ void startGame(Bench bench, Court court)//working on this
                 cur = cur->next;
             }
         }
-        //displaying the output all together (needs work)
-        cout<<"Report "<<quart<<endl;
-        court.print();
-        
         quart++;
         min = 0.0;
+        
     }
+    
+    
+    // The minutes are fucked (48mins only in one Game)
+    Player* cu;
+    cu = bench.head;
+    int c =0;
+    while(c<bench.size)
+    {
+        for(int i =0;i<12;i++)
+        {
+            if(cu->number == lockerRoom[i].number)
+            {
+                lockerRoom[i].minutes = cu->minutes;
+            }
+        }
+        cu = cu->next;
+        c++;
+    }
+   
+   
 }
+
 
 int main(int argc, char *argv[])
 {
+    if (argc < 2) {
+        cout << "Command:  \"input=<file>;output=<file>;\"" <<  endl;
+        return -1;
+    }
     ArgumentManager am(argc,argv);
     string inputfilename = am.get("input");
     string outputfilename = am.get("output");
-
+    
     Player* lockerRoom = new Player[12];
     
     Bench bench;
-
+    
     ifstream inf;
     inf.open(inputfilename);
-
+    
     for (int i = 0; i < 6; i++) {
         int number;
         int age;
@@ -336,36 +334,49 @@ int main(int argc, char *argv[])
         inf >> age;
         Player* p = new Player(number, age, 0, false);
         bench.add(p);
+        lockerRoom[i] = *p;
+        
     }
-    bench.print();
     
     Court court;
-    for (int i = 0; i < 6; i++) {
+    for (int i = 6; i < 12; i++) {
         int number;
         int age;
         inf >> number;
         inf >> age;
         Player* p = new Player(number, age, 0, false);
         court.add(p);
+        lockerRoom[i] = *p;
     }
     
     court.sort("age");
-    court.print();
     
-    startGame(bench, court);
-
-    //output
+    startGame(bench, court,lockerRoom);
+    
     ofstream outf;
     outf.open(outputfilename);
-
+    
+    
+    outf << "Report 1: "<<endl;
     outf << "Number - Minutes Played" << endl;
-    for(int i=0;i<bench.size;i++){
-        outf << bench.get(i)->number << " - " << bench.get(i)->minutes << endl;
+    for(int i =0;i<(bench.size+court.size);i++)
+    {
+        outf << lockerRoom[i].number << " - " << lockerRoom[i].minutes << endl;
     }
-    for(int i=0;i<court.size;i++){
-        outf << court.get(i)->number << " - " << court.get(i)->minutes << endl;
+    
+    outf << endl;
+    
+    outf << "Report 2: "<<endl;
+    outf << "Age - Number - Minutes Played" << endl;
+    for(int i =0;i<(bench.size+court.size);i++)
+    {
+        outf << lockerRoom[i].age << " - " << lockerRoom[i].number << " - " << lockerRoom[i].minutes << endl;
     }
+    
+    
+    
+   
+   
     
     return 0;
 }
-
