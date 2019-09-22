@@ -258,25 +258,23 @@ void startGame(Bench bench, Court court, Player* lockerRoom)//working on this
                 if(old <= ((quart-1)*12 + min+i) - court.head->timeatstart)
                     //        time since start   - time player entered court
                 {
-                    //cout << "changing player: " << court.head->number << "played: " << court.head->minutes << " st time:" << (quart-1)*12 + min+i << endl;
-                    //add minutes to minutes played
+                    
                     court.head->minutes += i;
-                    //bench player (needs work) to end of bench
+                    
                     bench.add(court.head);
                     bench.set(court.head);
                     court.swapouthead();
-                    //add player to court from top of bench
+                   
                     Player* tmp = bench.unbench();
-                    //set timestamp
+                    
                     tmp->timeatstart = quart*12 + min+i;
                     court.add(tmp);
-                    //sort court by age
                     court.sort("age");
-                    //cout<<min+i<<endl;
+                  
                 }
             }
             min++;
-            //add 1 min to all players on court
+            
             Player* cur = court.head;
             for(int i=0;i<court.size;i++){
                 cur->minutes += 1;
@@ -289,7 +287,7 @@ void startGame(Bench bench, Court court, Player* lockerRoom)//working on this
     }
     
     
-    // The minutes are fucked (48mins only in one Game)
+    
     Player* cu;
     cu = bench.head;
     int c =0;
